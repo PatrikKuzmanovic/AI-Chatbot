@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bean & Brew | AI Barista</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for a premium look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Chat Container -->
+        <main class="chat-container">
+            <!-- Header Section -->
+            <header class="chat-header">
+                <div class="shop-info">
+                    <div class="logo-circle">☕</div>
+                    <div>
+                        <h1>Bean & Brew</h1>
+                        <p class="status"><span class="status-dot"></span> Online AI Assistant</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="clear-chat" title="Clear Chat">Reset</button>
+                </div>
+            </header>
+
+            <!-- Messages List -->
+            <section id="chat-messages" class="messages-area">
+                <!-- Sample welcome message -->
+                <div class="message bot-message">
+                    <div class="message-content">
+                        Hello! Welcome to Bean & Brew. ☕ I'm your virtual barista. How can I help you today?
+                    </div>
+                    <span class="timestamp">Just now</span>
+                </div>
+            </section>
+
+            <!-- Input Section -->
+            <footer class="input-area">
+                <form id="chat-form" class="input-wrapper">
+                    <input type="text" id="user-input" placeholder="Type your question here..." autocomplete="off">
+                    <button type="submit" id="send-btn">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                        </svg>
+                    </button>
+                </form>
+                <p class="credits">Built for Bean & Brew Portfolio Demo</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- JavaScript - will be created in Phase 3 -->
+    <script src="app.js"></script>
+</body>
+</html>
