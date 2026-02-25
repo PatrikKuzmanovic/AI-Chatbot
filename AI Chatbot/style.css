@@ -56,6 +56,14 @@ h3 {
     flex-direction: column;
 }
 
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+
 /* HEADER */
 .chat-header {
     padding: 20px 24px;
