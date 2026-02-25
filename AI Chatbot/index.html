@@ -28,8 +28,10 @@
                     </div>
                 </div>
                 <div class="header-actions">
+                    <button id="theme-toggle" title="Switch to Dark Roast">🌙</button>
                     <button id="clear-chat" title="Clear Chat">Reset</button>
                 </div>
+
             </header>
 
             <!-- Messages List -->
@@ -43,7 +45,16 @@
                 </div>
             </section>
 
+            <!-- Quick Action Buttons -->
+            <div class="suggestions-container">
+                <button class="suggestion-btn" data-query="Can I see the menu?">☕ Menu</button>
+                <button class="suggestion-btn" data-query="What are your hours?">🕒 Hours</button>
+                <button class="suggestion-btn" data-query="What is the WiFi password?">📶 WiFi</button>
+                <button class="suggestion-btn" data-query="Where are you located?">📍 Location</button>
+            </div>
+
             <!-- Input Section -->
+
             <footer class="input-area">
                 <form id="chat-form" class="input-wrapper">
                     <input type="text" id="user-input" placeholder="Type your question here..." autocomplete="off">

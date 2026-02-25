@@ -74,11 +74,52 @@ const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 const chatMessages = document.getElementById('chat-messages');
 const resetBtn = document.getElementById('clear-chat');
+const suggestionBtns = document.querySelectorAll('.suggestion-btn');
+const themeToggle = document.getElementById('theme-toggle');
+
+/**
+ * Saves the current chat messages to LocalStorage
+ */
+function saveChatToLocal() {
+    const messages = [];
+    document.querySelectorAll('.message').forEach(msg => {
+        messages.push({
+            text: msg.querySelector('.message-content')?.textContent || "",
+            isUser: msg.classList.contains('user-message'),
+            timestamp: msg.querySelector('.timestamp')?.textContent || ""
+        });
+    });
+    localStorage.setItem('bean_brew_chat', JSON.stringify(messages));
+}
+
+/**
+ * Loads chat messages and theme from LocalStorage
+ */
+function loadChatFromLocal() {
+    // 1. Load History
+    const savedChat = localStorage.getItem('bean_brew_chat');
+    if (savedChat) {
+        const messages = JSON.parse(savedChat);
+        if (messages.length > 0) {
+            chatMessages.innerHTML = ''; // Clear initial if we have history
+            messages.forEach(msg => {
+                appendMessage(msg.text, msg.isUser, false, msg.timestamp);
+            });
+        }
+    }
+
+    // 2. Load Theme
+    const savedTheme = localStorage.getItem('bean_brew_theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggle.textContent = '☀️';
+    }
+}
 
 /**
  * Adds a message bubble to the chat area
  */
-function appendMessage(text, isUser = false) {
+function appendMessage(text, isUser = false, shouldSave = true, forcedTimestamp = null) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');
     messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
@@ -89,14 +130,22 @@ function appendMessage(text, isUser = false) {
 
     const timestamp = document.createElement('span');
     timestamp.classList.add('timestamp');
-    const now = new Date();
-    timestamp.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    if (forcedTimestamp) {
+        timestamp.textContent = forcedTimestamp;
+    } else {
+        const now = new Date();
+        timestamp.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
 
     messageDiv.appendChild(contentDiv);
     messageDiv.appendChild(timestamp);
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    if (shouldSave) saveChatToLocal();
 }
+
 
 /**
  * Typing indicator
@@ -168,8 +217,38 @@ chatForm.addEventListener('submit', async (e) => {
     appendMessage(aiResponse, false);
 });
 
-// Reset chat
-resetBtn.addEventListener('click', () => {
-    chatMessages.innerHTML = '';
-    appendMessage("Welcome back to Bean & Brew! How can I help you today? ☕", false);
+/**
+ * Handle Suggestion Button Clicks
+ */
+suggestionBtns.forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const query = btn.getAttribute('data-query');
+        appendMessage(query, true);
+
+        showBotLoading();
+        const aiResponse = await getAIResponse(query);
+        removeBotLoading();
+
+        appendMessage(aiResponse, false);
+    });
 });
+
+// Reset chat
+const themeToggleListener = themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    themeToggle.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('bean_brew_theme', isDark ? 'dark' : 'light');
+});
+
+resetBtn.addEventListener('click', () => {
+
+    if (confirm("Are you sure you want to clear your chat history?")) {
+        chatMessages.innerHTML = '';
+        localStorage.removeItem('bean_brew_chat');
+        appendMessage("Welcome back to Bean & Brew! How can I help you today? ☕", false);
+    }
+});
+
+// Load history on startup
+loadChatFromLocal();

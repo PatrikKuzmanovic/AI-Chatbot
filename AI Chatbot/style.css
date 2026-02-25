@@ -20,7 +20,21 @@
     --user-msg-bg: #3d2b1f;
 }
 
+body.dark-mode {
+    --primary-color: #f7e8d8;
+    --accent-color: #8fb19f;
+    --bg-color: #1a1a1a;
+    --white: #262626;
+    --text-main: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --border-color: #3d2b1f;
+    --bot-msg-bg: #2d2d2d;
+    --user-msg-bg: #4a3728;
+    background-color: #121212;
+}
+
 * {
+
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -113,7 +127,8 @@ h3 {
     border-radius: 50%;
 }
 
-#clear-chat {
+#clear-chat,
+#theme-toggle {
     padding: 6px 12px;
     border-radius: 20px;
     border: 1px solid var(--border-color);
@@ -124,10 +139,12 @@ h3 {
     transition: all 0.2s;
 }
 
-#clear-chat:hover {
-    background: #fdfdfd;
+#clear-chat:hover,
+#theme-toggle:hover {
+    background: var(--bot-msg-bg);
     color: var(--primary-color);
 }
+
 
 /* MESSAGES AREA */
 .messages-area {
@@ -176,7 +193,40 @@ h3 {
     text-align: right;
 }
 
+/* SUGGESTIONS AREA */
+.suggestions-container {
+    display: flex;
+    gap: 8px;
+    padding: 0 24px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Hide scrollbar for clean look */
+}
+
+.suggestions-container::-webkit-scrollbar {
+    display: none;
+}
+
+.suggestion-btn {
+    white-space: nowrap;
+    padding: 8px 16px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.suggestion-btn:hover {
+    background: var(--bot-msg-bg);
+    border-color: var(--primary-color);
+}
+
 /* INPUT AREA */
+
 .input-area {
     padding: 20px;
     background: var(--white);
