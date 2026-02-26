@@ -197,15 +197,34 @@ h3 {
 .suggestions-container {
     display: flex;
     gap: 8px;
-    padding: 0 24px 12px;
+    padding: 0 24px 12px 24px;
+    /* Balanced side padding */
     overflow-x: auto;
-    scrollbar-width: none;
-    /* Hide scrollbar for clean look */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scroll for iOS */
 }
 
-.suggestions-container::-webkit-scrollbar {
-    display: none;
+/* Ensure the last button has space at the end of the scroll */
+.suggestions-container::after {
+    content: '';
+    padding-right: 16px;
 }
+
+/* Added a subtle, themed scrollbar for better UX */
+.suggestions-container::-webkit-scrollbar {
+    height: 4px;
+}
+
+.suggestions-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.suggestions-container::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
 
 .suggestion-btn {
     white-space: nowrap;

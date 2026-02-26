@@ -7,42 +7,52 @@ const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-
 // 2. Knowledge Base (Fictional Coffee Shop: Bean & Brew)
 const KNOWLEDGE_BASE = `
 You are the virtual barista for "Bean & Brew", a cozy, professional coffee shop. 
-Your goal is to help customers with their questions politely and warmly.
 
-SHOP INFORMATION:
-- Name: Bean & Brew
-- Location: 123 Main Street
-- Hours: Mon-Fri 7am-7pm, Sat-Sun 8am-8pm
-- WiFi: Password is "CoffeeLover2024"
-
-MENU:
+PRICING LIST:
 - Espresso: $3.50
-- Latte: $4.50 (Oat/Almond milk available for +$0.50)
+- Latte: $4.50
 - Cappuccino: $4.50
 - Cold Brew: $4.00
 - Blueberry Muffin: $3.50
 - Butter Croissant: $3.00
+- Milk Alternatives (Oat/Almond): +$0.50
 
-OFFERS:
-- Loyalty Program: Buy 9 drinks, get the 10th one free!
-
-INSTRUCTIONS:
-- Keep responses concise and friendly.
-- Use coffee-related emojis occasionally.
-- If you don't know the answer, politely ask them to visit the shop or call us.
-- Only talk about Bean & Brew related topics.
+ORDERING INSTRUCTIONS:
+1. If a customer wants to order, calculate the TOTAL price.
+2. If they ask for milk alternatives (Oat/Almond), add $0.50 to that specific drink.
+3. Always provide a "Ready Time" estimate:
+   - 1-2 items: 5 minutes.
+   - 3-5 items: 10 minutes.
+   - 6+ items: 15 minutes.
+4. Confirm the order details clearly (e.g., "That will be one Latte and one Muffin. Your total is $8.00").
+5. Use a warm, barista-like tone with emojis. ☕🥐
 `;
 
 /**
  * Fallback responses if the AI API is down or quota hit
- * This ensures your portfolio demo ALWAYS works for clients!
  */
 function getFallbackResponse(userMessage) {
     const msg = userMessage.toLowerCase().trim();
 
+    // --- SPECIAL ORDER DETECTION (SIMULATED CALCULATION) ---
+    if (msg.includes("order") || msg.includes("want") || msg.includes("buy") || msg.includes("get")) {
+        let total = 0;
+        let items = [];
+
+        if (msg.includes("latte")) { total += 4.50; items.push("Latte"); }
+        if (msg.includes("espresso")) { total += 3.50; items.push("Espresso"); }
+        if (msg.includes("cappuccino")) { total += 4.50; items.push("Cappuccino"); }
+        if (msg.includes("cold brew")) { total += 4.00; items.push("Cold Brew"); }
+        if (msg.includes("muffin")) { total += 3.50; items.push("Blueberry Muffin"); }
+        if (msg.includes("croissant")) { total += 3.00; items.push("Butter Croissant"); }
+
+        if (items.length > 0) {
+            const time = items.length > 2 ? "10 minutes" : "5 minutes";
+            return `I've noted your order for: ${items.join(", ")}. Your total is $${total.toFixed(2)}. It will be ready for pickup in about ${time}! ☕🥐`;
+        }
+    }
+
     // 1. Specific Info Queries (PRIORITY)
-    // We check these first because if a user says "Thank you, what is on the menu?", 
-    // we want to prioritize the menu answer over the generic "you're welcome".
     if (msg.includes("wifi") || msg.includes("password")) return "Our WiFi password is **CoffeeLover2024**. Enjoy your browsing! 📶";
     if (msg.includes("pastry") || msg.includes("muffin") || msg.includes("croissant") || msg.includes("bakery")) return "Our pastries are freshly baked! We have Blueberry Muffins ($3.50) and Butter Croissants ($3.00). Would you like to add one to your order? 🥐";
     if (msg.includes("menu") || msg.includes("coffee") || msg.includes("drink")) return "We have delicious Espressos ($3.50), Lattes ($4.50), and Cappuccinos ($4.50). Would you like to see our pastry menu too? ☕";
@@ -50,7 +60,7 @@ function getFallbackResponse(userMessage) {
     if (msg.includes("location") || msg.includes("where") || msg.includes("address")) return "You can find us at 123 Main Street. We can't wait to see you! 📍";
     if (msg.includes("loyalty") || msg.includes("free") || msg.includes("point")) return "Our loyalty program is simple: Buy 9 drinks, and your 10th one is on the house! 🎁";
 
-    // 2. Greetings (Strict match or starts with)
+    // 2. Greetings
     if (msg === "hello" || msg === "hi" || msg === "hey" || msg === "good morning" || msg.startsWith("hello ")) {
         return "Hi there! Welcome to Bean & Brew. ☕ I'm your virtual barista. How can I help you today?";
     }
@@ -66,8 +76,9 @@ function getFallbackResponse(userMessage) {
     }
 
     // 5. Default Catch-all
-    return "I'd be happy to help with that! While I'm still learning some complex requests, I can tell you all about our menu, hours, and location. What would you like to know? ☕";
+    return "I'd be happy to help with that! You can place an order, or ask me about our menu, hours, and location. What can I get started for you? ☕";
 }
+
 
 
 const chatForm = document.getElementById('chat-form');
