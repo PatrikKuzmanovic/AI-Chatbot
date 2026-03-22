@@ -18,6 +18,7 @@
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     --bot-msg-bg: #f3ece4;
     --user-msg-bg: #3d2b1f;
+    --gold: #c4a484;
 }
 
 body.dark-mode {
@@ -31,6 +32,7 @@ body.dark-mode {
     --bot-msg-bg: #2d2d2d;
     --user-msg-bg: #4a3728;
     background-color: #121212;
+    --gold: #d4b494;
 }
 
 * {
@@ -73,7 +75,8 @@ h3 {
 .chat-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1;
+    overflow: hidden;
     width: 100%;
 }
 
@@ -358,4 +361,157 @@ h3 {
         height: 100vh;
         border-radius: 0;
     }
+}
+
+/* API SETUP SECTION */
+.api-setup-card {
+    background: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.api-setup-card.collapsed {
+    padding: 10px 24px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.api-setup-card.collapsed:hover {
+    opacity: 1;
+    background: var(--bot-msg-bg);
+}
+
+.api-setup-card.collapsed > *:not(.api-setup-header) {
+    display: none;
+}
+
+.api-setup-card.collapsed .api-setup-header h2 {
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+}
+
+.api-setup-card.collapsed .api-setup-header h2::after {
+    content: "✅ Key Saved (Click to edit)";
+    font-size: 0.8rem;
+    color: #4caf50;
+    font-weight: normal;
+}
+
+.api-setup-card.collapsed .minimize-btn {
+    display: none;
+}
+
+.api-setup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.api-setup-card h2 {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.minimize-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.minimize-btn:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+body.dark-mode .minimize-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.api-setup-card p {
+    font-size: 0.85rem;
+    color: var(--text-main);
+}
+
+.api-link-btn {
+    display: inline-block;
+    color: var(--accent-color);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 4px;
+}
+
+.api-link-btn:hover {
+    text-decoration: underline;
+}
+
+.api-input-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+#api-key-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--text-main);
+    transition: border 0.3s;
+}
+
+#api-key-input:focus {
+    border-color: var(--primary-color);
+}
+
+#save-api-key-btn {
+    padding: 10px 16px;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+#save-api-key-btn:hover {
+    background: var(--accent-color);
+}
+
+.api-security-note {
+    font-size: 0.75rem !important;
+    color: var(--text-muted) !important;
+    line-height: 1.4;
+    margin-top: 4px;
+}
+
+.api-status {
+    font-size: 0.85rem;
+    color: #4caf50 !important;
+    font-weight: 600;
+}
+
+.api-status.hidden {
+    display: none;
 }

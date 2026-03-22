@@ -16,6 +16,25 @@
 
 <body>
     <div class="app-container">
+        <!-- API Key Setup Section -->
+        <div id="api-setup-section" class="api-setup-card">
+            <div class="api-setup-header">
+                <h2>⚙️ API Key Setup (One-time)</h2>
+                <button type="button" id="minimize-api-btn" class="minimize-btn" title="Minimize">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
+                    </svg>
+                </button>
+            </div>
+            <p>This demo requires a free Gemini API key. <a href="https://ai.google.dev" target="_blank" class="api-link-btn">Get yours at ai.google.dev</a></p>
+            <div class="api-input-group">
+                <input type="password" id="api-key-input" placeholder="Paste your Gemini API key here..." autocomplete="off">
+                <button id="save-api-key-btn">Save API Key</button>
+            </div>
+            <p class="api-security-note">Don't have an API key? Get one free at ai.google.dev (takes 2 minutes).<br>Your key is stored locally in your browser and only used to call the Gemini API.</p>
+            <p id="api-key-status" class="api-status hidden">✅ API key saved!</p>
+        </div>
+
         <!-- Main Chat Container -->
         <main class="chat-container">
             <!-- Header Section -->

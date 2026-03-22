@@ -1,8 +1,6 @@
 // --- STAGE 4 & 5: AI Integration & Knowledge Base ---
 
-// 1. Configuration 
-const GEMINI_API_KEY = "AIzaSyAYWP8mspdL65RuLBxMhdT6BngzehWPrhc";
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
+// 1. Configuration (API Key is loaded from localStorage)
 
 // 2. Knowledge Base (Fictional Coffee Shop: Bean & Brew)
 const KNOWLEDGE_BASE = `
@@ -179,9 +177,18 @@ function removeBotLoading() {
  * Call Gemini API
  */
 async function getAIResponse(userMessage) {
-    if (GEMINI_API_KEY === "YOUR_API_KEY_HERE" || GEMINI_API_KEY === "") {
-        return "I'm almost ready! Please add your Gemini API key in `app.js` to start chatting with me.";
+    const apiKey = localStorage.getItem('geminiApiKey');
+    if (!apiKey) {
+        alert("Please enter your API key first!");
+        const apiInput = document.getElementById('api-key-input');
+        if (apiInput) {
+            document.getElementById('api-setup-section').classList.remove('collapsed');
+            apiInput.focus();
+        }
+        return "I need an API key to help you! Please add it in the setup section above.";
     }
+
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`;
 
     try {
         const response = await fetch(API_URL, {
@@ -242,6 +249,62 @@ suggestionBtns.forEach(btn => {
 
         appendMessage(aiResponse, false);
     });
+});
+
+// --- API Key Setup Logic ---
+const apiSetupSection = document.getElementById('api-setup-section');
+const apiKeyInput = document.getElementById('api-key-input');
+const saveApiKeyBtn = document.getElementById('save-api-key-btn');
+const apiKeyStatus = document.getElementById('api-key-status');
+
+// Check if key exists on load
+window.addEventListener('DOMContentLoaded', () => {
+    const existingKey = localStorage.getItem('geminiApiKey');
+    if (existingKey) {
+        apiKeyInput.value = '********'; // Obscure it visually
+        apiSetupSection.classList.add('collapsed');
+    }
+});
+
+saveApiKeyBtn.addEventListener('click', () => {
+    const key = apiKeyInput.value.trim();
+    if (key && key !== '********') {
+        localStorage.setItem('geminiApiKey', key);
+        apiKeyStatus.classList.remove('hidden');
+        apiKeyInput.value = '********';
+        
+        setTimeout(() => {
+            apiSetupSection.classList.add('collapsed');
+            apiKeyStatus.classList.add('hidden'); // Reset status for next time it expands
+        }, 1500);
+    } else if (key === '********') {
+        apiSetupSection.classList.add('collapsed');
+    } else {
+        alert("Please enter a valid API key.");
+    }
+});
+
+// Allow expanding the collapsed section
+apiSetupSection.addEventListener('click', (e) => {
+    // If the click is on the minimize button or its children, ignore it here
+    if (e.target.closest('#minimize-api-btn')) return;
+    
+    if (apiSetupSection.classList.contains('collapsed')) {
+        apiSetupSection.classList.remove('collapsed');
+        apiKeyInput.value = ''; // Clear placeholder so user can enter new key
+        apiKeyInput.focus();
+    }
+});
+
+// Add minimize button functionality
+document.getElementById('minimize-api-btn').addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent expanding it immediately again
+    apiSetupSection.classList.add('collapsed');
+    if (localStorage.getItem('geminiApiKey')) {
+        apiKeyInput.value = '********'; // restore mask if a key exists
+    } else {
+        apiKeyInput.value = '';
+    }
 });
 
 // Reset chat
